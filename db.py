@@ -28,11 +28,16 @@ class Db:
             self.conn.commit()
         return cursor
 
-    def add(self, user_id, name="", institute=""):
-        sql = "INSERT INTO `leader_users` (`user_id`, `name`, `institute`) VALUES (%s, %s, %s)"
-        self.request = self.query(sql, (user_id, name, institute))
+    def create_user(self, user_id, name=""):
+        sql = "INSERT INTO `leader_users` (`user_id`, `name`) VALUES (%s, %s)"
+        self.request = self.query(sql, (user_id, name))
         sql = "INSERT INTO `points_table` (`user_id`, `current_question`) VALUES (%s, %s)"
-        self.request = self.query(sql, (user_id, 10))
+        self.request = self.query(sql, (user_id, 0))
+        print("Db().add(): Created")
+
+    def add_institute(self, user_id, institute=""):
+        sql = "UPDATE `leader_users` SET `institute`=%s WHERE `user_id`=%s"
+        self.request = self.query(sql, (institute, user_id))
         print("Db().add(): Created")
 
     def get_result(self, user_id):
@@ -41,7 +46,7 @@ class Db:
         self.result = self.request.fetchone()
         print("Db().get_result(): Done")
 
-        return self.result
+        return int(self.result['result'])
 
     def get_current_question(self, user_id):
         sql = "SELECT `current_question` FROM `points_table` WHERE `user_id`=%s"
@@ -49,27 +54,31 @@ class Db:
         self.result = self.request.fetchone()
         print("Db().get_current_question(): Done")
 
-        return self.result
+        return int(self.result['current_question'])
 
     def set_point(self, user_id, question):
         result = self.get_result(user_id)
-        new_result = int(result['result']) + 1
+        new_result = result + 1
         sql = "UPDATE `points_table` SET `%s`='1', `result`=%s WHERE `user_id`=%s"
         self.request = self.query(sql, (question, str(new_result), user_id))
         print("Db().set_point(): Done")
 
     def increment_current_question(self, user_id, current_question):
-        new_question = int(current_question['current_question']) + 1
+        new_question = current_question + 1
         sql = "UPDATE `points_table` SET `current_question`=%s WHERE `user_id`=%s"
         self.request = self.query(sql, (str(new_question), user_id))
         print("Db().increment_current_question(): Done")
 
 
 def test():
-    user = 8909
+    user = 8929
     db = Db()
-    db.add(user, "Nowhere man", "simple")
+    db.create_user(user, "Nowhere man")
+    db.add_institute(user, "simple")
     question = db.get_current_question(user)
     db.set_point(user, 5)
     db.increment_current_question(user, question)
     print(db.get_result(user))
+
+
+test()
