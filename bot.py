@@ -160,5 +160,4 @@ async def echo_message(message: types.Message):
     await message.reply(MESSAGES['unknown'], reply=False)
 
 
-if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+executor.start_polling(dp, skip_updates=True)
