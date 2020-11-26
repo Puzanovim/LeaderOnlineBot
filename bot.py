@@ -6,11 +6,9 @@ from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButt
 
 
 from config import TOKEN
-from messages import MESSAGES
-from States.welcome import Welcome
-from States.quiz import Quiz
+from messages import MESSAGES, questions, institutes
+from states import Welcome, Quiz
 from db import Db
-from dataQuiz import questions, institutes
 
 
 bot = Bot(token=TOKEN)
