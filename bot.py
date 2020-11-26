@@ -95,7 +95,7 @@ async def start_quiz(message: types.Message):
     await message.reply(text, reply_markup=markup, reply=False)
 
 
-@dp.message_handler(state='*')
+@dp.message_handler(state=Quiz)
 async def questions_step_by_step(message: types.Message, state: FSMContext):
     """
     Функция квиза
@@ -106,6 +106,10 @@ async def questions_step_by_step(message: types.Message, state: FSMContext):
     """
     user_id: int = message.from_user.id
     current_question: int = db.get_current_question(user_id)
+
+    async with state.proxy() as data:
+        data[current_question] = message.text
+
     right_answer = False
     if current_question > 30:
         text = MESSAGES['you are finished']
