@@ -10,6 +10,12 @@ from messages import MESSAGES, questions, institutes
 from states import Welcome, Quiz
 from db import Db
 
+from glob import glob
+from random import choice
+
+
+# image8 = "https://drive.google.com/drive/folders/1WFZ1RyGLB-Qe7wenvy7KtUK92Lm7g84P"
+
 
 bot = Bot(token=TOKEN)
 storage = MemoryStorage()
@@ -32,7 +38,10 @@ async def process_help_command(message: types.Message):
 async def result(message: types.Message):
     my_result = db.get_result(message.from_user.id)
     text = MESSAGES['result'] + str(my_result)
-    await message.reply(text, reply=False)
+    images = glob("img/*")
+    img = choice(images)
+    await bot.send_photo(message.from_user.id, photo=open(img, 'rb'), caption=text)
+    # await message.reply(text, reply=False)
 
 
 @dp.message_handler(state=Welcome.name)
@@ -53,7 +62,7 @@ async def process_name(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=Welcome.institute)
-async def process_name(message: types.Message, state: FSMContext):
+async def process_institute(message: types.Message, state: FSMContext):
     """
     Process user institute
     """
@@ -71,7 +80,7 @@ async def process_name(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(content_types=['photo'], state=Welcome.photo)
-async def forward(message: types.Message, state: FSMContext):  # TODO проверить тип сообщения для фотографии
+async def process_photo(message: types.Message, state: FSMContext):  # TODO проверить тип сообщения для фотографии
     """
     Process user registration
     """
@@ -157,7 +166,11 @@ async def questions_step_by_step(message: types.Message, state: FSMContext):
 
 @dp.message_handler()
 async def echo_message(message: types.Message):
-    await message.reply(MESSAGES['unknown'], reply=False)
+    if message.text in MESSAGES.keys():
+        text = MESSAGES[message.text]
+    else:
+        text = MESSAGES['unknown']
+    await message.reply(text, reply=False)
 
 
 executor.start_polling(dp, skip_updates=True)

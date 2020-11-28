@@ -5,7 +5,7 @@ from config import MYSQL_DB, MYSQL_USER, MYSQL_HOST, MYSQL_PWD
 
 
 class Db:
-    def __init__(self):
+    def connect(self):
         self.conn = pymysql.connect(host=MYSQL_HOST,
                                     user=MYSQL_USER,
                                     password=MYSQL_PWD,
@@ -13,11 +13,9 @@ class Db:
                                     charset='utf8mb4',
                                     cursorclass=pymysql.cursors.DictCursor)
 
-    def connect(self):
-        pass
-
     def query(self, query, params=()):
         try:
+            self.connect()
             cursor = self.conn.cursor()
             cursor.execute(query, params)
             self.conn.commit()
@@ -26,6 +24,8 @@ class Db:
             cursor = self.conn.cursor()
             cursor.execute(query, params)
             self.conn.commit()
+        finally:
+            self.conn.close()
         return cursor
 
     def count(self, user_id):
