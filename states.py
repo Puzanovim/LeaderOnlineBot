@@ -7,6 +7,10 @@ class Welcome(StatesGroup):
     photo = State()  # Will be represented in storage as 'Welcome:photo'
 
 
+class ChangeName(StatesGroup):
+    name = State()
+
+
 class Quiz(StatesGroup):
     Task1 = State()
     Task2 = State()

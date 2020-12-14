@@ -13,7 +13,17 @@ MESSAGES = {
     "Как дела?": "Супер! А у тебя как?",
     "Хорошо": "Хорошо, когда все хорошо :)",
     "Супер": "Гуд ;)",
-    "Отлично": "Рад это слышать!"
+    "Отлично": "Рад это слышать!",
+    "gift": "Привет, друг!\nПоздравляю тебя с успешным прохождением квеста!\nДержи свой сертификат ;)",
+    "change_name": "Введи новое имя или символ N, если хочешь оставить прежнее:",
+    "new_name": "Твое ФИО обновлено на ",
+    "old_name": "Осталось прежнее ФИО — ",
+    "repeat_name": "К сожалению, ты не проходил квест :(",
+    "change_name_again": "\nОно будет указано в твоем сертификате. Если хочешь изменить ФИО нажми /change_name",
+    "alert_change_name": "Привет, друг!\nНа этих выходных пришлем тебе твой сертификат ;)\n"
+                         "Но перед этим, хотим, чтобы ты проверил корректность твоего имени.\n"
+                         "Если хочешь его поменять — используй команду /change_name\n"
+                         "Твое текущее имя: "
 }
 
 
@@ -193,10 +203,10 @@ institutes = {
                  "Основы личностного роста (для лиц с ОВЗ) (https://openedu.ru/course/urfu/Inclus_M1/)",
                  "Развитие ресурсов организма (для лиц с ОВЗ) (https://openedu.ru/course/urfu/Inclus_M2/)"],
     "ИФКСиМП":  ["Взаимодействие государства и бизнеса в условиях цифровой трансформации (https://openedu.ru/course/urfu/GOVBUSINESS/)",
+                 "Введение в биологию клетки (https://openedu.ru/course/urfu/CELLBIO/)",
                  "Основы личностного роста (для лиц с ОВЗ) (https://openedu.ru/course/urfu/Inclus_M1/)",
                  "Развитие ресурсов организма (для лиц с ОВЗ) (https://openedu.ru/course/urfu/Inclus_M2/)"],
     "УГИ":      ["Взаимодействие государства и бизнеса в условиях цифровой трансформации (https://openedu.ru/course/urfu/GOVBUSINESS/)",
-                 "Введение в биологию клетки (https://openedu.ru/course/urfu/CELLBIO/)",
                  "Основы личностного роста (для лиц с ОВЗ) (https://openedu.ru/course/urfu/Inclus_M1/)",
                  "Развитие ресурсов организма (для лиц с ОВЗ) (https://openedu.ru/course/urfu/Inclus_M2/)"],
     "ФТИ":      ["Введение в биологию клетки (https://openedu.ru/course/urfu/CELLBIO/)",
@@ -238,10 +248,14 @@ institutes = {
     "я не из УрФУ": ["Программирование глубоких нейронных сетей на Python (https://openedu.ru/course/urfu/PYDNN/)",
                     "Основные приложения линейной алгебры в инженерном образовании (https://openedu.ru/course/urfu/LineAlg/)",
                     "Взаимодействие государства и бизнеса в условиях цифровой трансформации (https://openedu.ru/course/urfu/GOVBUSINESS/)",
-                     "Ядерная медицина (https://openedu.ru/course/urfu/NUCMED/)",
-                     "Информационные сервисы в управлении инженерной деятельностью (https://openedu.ru/course/urfu/ITS/)",
+                     "Теория вероятностей и математическая статистика для инженеров (https://openedu.ru/course/urfu/TheorVer/)",
+                    "Информационные сервисы в управлении инженерной деятельностью (https://openedu.ru/course/urfu/ITS/)",
+                    "Ядерная медицина (https://openedu.ru/course/urfu/NUCMED/)",
                      "Введение в биологию клетки (https://openedu.ru/course/urfu/CELLBIO/)",
-                     "Основы личностного роста (для лиц с ОВЗ) (https://openedu.ru/course/urfu/Inclus_M1/)",
+                     "Строительные технологии на основе хризотилцементных материалов (https://openedu.ru/course/urfu/chryso/)",
+                    "Экономическая эффективность технических решений (https://openedu.ru/course/urfu/EFFSOLUTION/)",
+                    "Управление машиностроительным предприятием (https://openedu.ru/course/urfu/MANEGEMACH/)",
+                    "Основы личностного роста (для лиц с ОВЗ) (https://openedu.ru/course/urfu/Inclus_M1/)",
                      "Развитие ресурсов организма (для лиц с ОВЗ) (https://openedu.ru/course/urfu/Inclus_M2/)"],
 }
 

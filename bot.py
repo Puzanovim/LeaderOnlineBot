@@ -4,15 +4,16 @@ from aiogram.dispatcher import Dispatcher, FSMContext
 from aiogram.utils import executor
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton
 
+from PIL import Image, ImageDraw, ImageFont
+from asyncio import sleep
 
 from config import TOKEN
 from messages import MESSAGES, questions, institutes
-from states import Welcome, Quiz
+from states import Welcome, Quiz, ChangeName
 from db import Db
 
 from glob import glob
 from random import choice
-
 
 # image8 = "https://drive.google.com/drive/folders/1WFZ1RyGLB-Qe7wenvy7KtUK92Lm7g84P"
 
@@ -21,6 +22,55 @@ bot = Bot(token=TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 db = Db()
+
+
+@dp.message_handler(commands=['h'])
+async def send_cert(message: types.Message):
+    await message.reply(MESSAGES['alert_change_name'], reply=False)
+
+
+@dp.message_handler(commands=['get_gifts_all'])
+async def send_cert(message: types.Message):
+    users = db.get_users()
+    for user in users:
+        try:
+            name = user['name']
+            user_id = user['user_id']
+
+            image = Image.open("./certs/cert.png")
+            draw = ImageDraw.Draw(image)
+
+            W = 2480
+            style = ImageFont.truetype('11528.ttf', size=120)
+
+            w, h = style.getsize(name)
+            draw.text(((W-w)/2, 1550), name, font=style, fill="#fff")
+
+            name_cert = name + ".png"
+            image.save(name_cert, "PNG")
+
+            text = MESSAGES['gift']
+            img = name_cert
+            await bot.send_photo(user_id, photo=open(img, 'rb'), caption=text)
+            print(f"Gift to {name} with id={user_id} sent!")
+            await sleep(1)
+        except Exception as e:
+            print(e)
+
+
+@dp.message_handler(commands=['get_name_alert_all'])
+async def send_cert(message: types.Message):
+    users = db.get_users()
+    for user in users:
+        try:
+            name = user['name']
+            user_id = user['user_id']
+            text = MESSAGES['alert_change_name'] + name
+            await bot.send_message(user_id, text)
+            print(f"Alert to {name} with id={user_id} sent!")
+            await sleep(1)
+        except Exception as e:
+            print(e)
 
 
 @dp.message_handler(commands=['start'])
@@ -41,7 +91,29 @@ async def result(message: types.Message):
     images = glob("img/*")
     img = choice(images)
     await bot.send_photo(message.from_user.id, photo=open(img, 'rb'), caption=text)
-    # await message.reply(text, reply=False)
+
+
+@dp.message_handler(commands=['change_name'])
+async def change_name(message: types.Message):
+    await ChangeName.name.set()
+    await message.reply(MESSAGES["change_name"], reply=False)
+
+
+@dp.message_handler(state=ChangeName.name)
+async def set_name(message: types.Message, state: FSMContext):
+    """
+    Change user name
+    """
+    if message.text == "N":
+        text = MESSAGES["old_name"] + db.get_name(message.from_user.id) + MESSAGES["change_name_again"]
+    else:
+        answer = db.update_name(message.from_user.id, message.text)
+        if answer == 1:
+            text = MESSAGES["new_name"] + message.text + MESSAGES["change_name_again"]
+        else:
+            text = MESSAGES["repeat_name"]
+    await state.finish()
+    await message.reply(text, reply=False)
 
 
 @dp.message_handler(state=Welcome.name)
@@ -72,6 +144,10 @@ async def process_institute(message: types.Message, state: FSMContext):
     # добавляем институт в БД
     db.add_institute(message.from_user.id, message.text)
 
+    # text = MESSAGES['course']
+    # for course in institutes["я не из УрФУ"]:
+    #     text += course + "\n\n"
+
     text = MESSAGES['course']
     for course in institutes[message.text]:
         text += course + "\n\n"
@@ -80,7 +156,7 @@ async def process_institute(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(content_types=['photo'], state=Welcome.photo)
-async def process_photo(message: types.Message, state: FSMContext):  # TODO проверить тип сообщения для фотографии
+async def process_photo(message: types.Message, state: FSMContext):
     """
     Process user registration
     """
@@ -108,7 +184,6 @@ async def start_quiz(message: types.Message):
 async def questions_step_by_step(message: types.Message, state: FSMContext):
     """
     Функция квиза
-    # TODO разобраться со стейтами (используем / не используем)
     :param state:
     :param message: сообщение пользователя
     :return: отправляем следующий вопрос

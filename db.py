@@ -50,6 +50,27 @@ class Db:
             self.request = self.query(sql, (name, user_id))
             print("Db().create_user(): Updated")
 
+    def update_name(self, user_id, name=""):
+        exist = self.count(user_id)
+        if exist:
+            sql = "UPDATE `leader_users` SET `name`=%s WHERE `user_id`=%s"
+            self.request = self.query(sql, (name, user_id))
+            print("Db().update_name(): Updated")
+            return 1
+        else:
+            return 0
+
+    def get_name(self, user_id):
+        exist = self.count(user_id)
+        if exist:
+            sql = "SELECT * FROM `leader_users` WHERE `user_id`=%s"
+            self.request = self.query(sql, user_id)
+            self.result = self.request.fetchone()
+            print("Db().get_name(): Got")
+            return self.result["name"]
+        else:
+            return ""
+
     def add_institute(self, user_id, institute=""):
         exist = self.count(user_id)
         if exist:
@@ -107,6 +128,14 @@ class Db:
         sql = "UPDATE `points_table` SET `count_of_hints`='0' WHERE `user_id`=%s"
         self.request = self.query(sql, user_id)
         print("Db().delete_hint(): Done")
+
+    def get_users(self):
+        sql = "SELECT * FROM `leader_users`"
+        self.request = self.query(sql)
+        self.result = self.request.fetchall()
+        print("Db().get_users(): Done")
+
+        return self.result
 
 
 def test():
